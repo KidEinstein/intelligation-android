@@ -11,7 +11,8 @@
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
         android:layout_marginTop="36dp"
-        android:hint="@string/name" />
+        android:hint="@string/name"
+        android:inputType="textCapWords" />
 
     <EditText
         android:layout_width="match_parent"
@@ -19,7 +20,8 @@
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:hint="@string/mobile_number" />
+        android:hint="@string/mobile_number"
+        android:inputType="number" />
 
     <EditText
         android:layout_width="match_parent"

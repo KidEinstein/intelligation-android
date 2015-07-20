@@ -24,6 +24,9 @@ public class SignUp extends ActionBarActivity {
     }
 
     public void decrement(View v) {
+        if (numberOfParts == 0) {
+            return;
+        }
         numberOfParts--;
         updateNumberOfPartsTextView(numberOfParts);
 
