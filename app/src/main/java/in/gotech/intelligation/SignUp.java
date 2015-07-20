@@ -2,13 +2,14 @@ package in.gotech.intelligation;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 /**
  * Created by anirudh on 20/07/15.
  */
-public class SignUp extends ActionBarActivity {
+public class SignUp extends AppCompatActivity {
     int numberOfParts = 0;
 
     @Override
