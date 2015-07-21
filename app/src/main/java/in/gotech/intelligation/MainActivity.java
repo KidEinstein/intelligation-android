@@ -16,6 +16,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.Window;
 import android.support.v4.view.PagerTabStrip;
 
+import in.gotech.intelligation.SlidingTabLayout;
+
+import android.graphics.Color;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_ITEMS = 3;
@@ -24,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
 
     ViewPager mPager;
 
+    SlidingTabLayout tabs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAdapter = new MyAdapter(getSupportFragmentManager());
@@ -34,6 +39,22 @@ public class MainActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
 
+        // Assiging the Sliding Tab Layout View
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return Color.WHITE;
+            }
+        });
+
+
+        tabs.setDistributeEvenly(true);
+
+        // Setting the ViewPager For the SlidingTabsLayout
+        tabs.setViewPager(mPager);
 
     }
 

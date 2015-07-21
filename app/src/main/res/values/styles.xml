@@ -11,4 +11,9 @@
         <item name="android:background">@drawable/background</item>
     </style>
 
+    <style name="GreenBackground">
+        <item name="android:background">#7CB342</item>
+    </style>
+
+
 </resources>
