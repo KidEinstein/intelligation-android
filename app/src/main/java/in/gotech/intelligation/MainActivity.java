@@ -1,8 +1,6 @@
 package in.gotech.intelligation;
 
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.FragmentManager;
-import android.view.Window;
-import android.support.v4.view.PagerTabStrip;
-import in.gotech.intelligation.SlidingTabLayout;
 
 import android.graphics.Color;
 
@@ -57,25 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static class MainFragment extends Fragment {
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            Bundle args = getArguments();
-            int fragmentNumber = args.getInt("fragmentNumber");
-            switch (fragmentNumber) {
-                case 0:
-                    return inflater.inflate(
-                            R.layout.summary, container, false);
-                case 1:
-                    return inflater.inflate(
-                            R.layout.stats, container, false);
-                default:
-                    return inflater.inflate(R.layout.weather, container, false);
-            }
-
-        }
-    }
 
     public class MyAdapter extends FragmentPagerAdapter {
 
@@ -90,11 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new MainFragment();
-            Bundle args = new Bundle();
-            args.putInt("fragmentNumber", position);
-            fragment.setArguments(args);
-            return fragment;
+            switch (position) {
+                case 0:
+                    return new SummaryFragment();
+                case 1:
+                    return new StatsFragment();
+                default:
+                    return new WeatherFragment();
+            }
         }
 
         @Override
