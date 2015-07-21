@@ -1,43 +1,109 @@
 package in.gotech.intelligation;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.support.v4.app.FragmentManager;
+import android.view.Window;
 
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends ActionBarActivity {
+    private static final int NUM_ITEMS = 3;
+
+    MyAdapter mAdapter;
+
+    ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAdapter = new MyAdapter(getSupportFragmentManager());
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mAdapter);
+
+        // Specify that tabs should be displayed in the action bar.
+        final ActionBar actionBar = getActionBar();
+
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // When the tab is selected, switch to the
+                // corresponding page in the ViewPager.
+                mPager.setCurrentItem(tab.getPosition());
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+//        actionBar.addTab(actionBar.newTab().setText("Summary").setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab().setText("Statistics").setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab().setText("Weather").setTabListener(tabListener));
+
+
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public static class MainFragment extends Fragment {
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            Bundle args = getArguments();
+            int fragmentNumber = args.getInt("fragmentNumber");
+            if (fragmentNumber == 0) {
+                return inflater.inflate(
+                        R.layout.summary, container, false);
+            } else if (fragmentNumber == 1) {
+                return inflater.inflate(
+                        R.layout.stats, container, false);
+            } else {
+                return inflater.inflate(
+                        R.layout.weather, container, false);
+            }
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public class MyAdapter extends FragmentPagerAdapter {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        public MyAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = new MainFragment();
+            Bundle args = new Bundle();
+            args.putInt("fragmentNumber", position);
+            fragment.setArguments(args);
+            return fragment;
+        }
     }
+
+
 }
 
 
