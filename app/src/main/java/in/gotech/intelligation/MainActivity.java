@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.FragmentManager;
 import android.view.Window;
+import android.support.v4.view.PagerTabStrip;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,33 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-
-        // Specify that tabs should be displayed in the action bar.
-        final ActionBar actionBar = getActionBar();
-
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Create a tab listener that is called when the user changes tabs.
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // When the tab is selected, switch to the
-                // corresponding page in the ViewPager.
-                mPager.setCurrentItem(tab.getPosition());
-            }
-
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // hide the given tab
-            }
-
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // probably ignore this event
-            }
-        };
-//        actionBar.addTab(actionBar.newTab().setText("Summary").setTabListener(tabListener));
-//        actionBar.addTab(actionBar.newTab().setText("Statistics").setTabListener(tabListener));
-//        actionBar.addTab(actionBar.newTab().setText("Weather").setTabListener(tabListener));
-
 
 
     }
@@ -100,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
             args.putInt("fragmentNumber", position);
             fragment.setArguments(args);
             return fragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Summary";
+                case 1:
+                    return "Statistics";
+                case 2:
+                    return "Weather";
+            }
+            return "";
         }
     }
 
