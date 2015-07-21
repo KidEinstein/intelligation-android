@@ -64,16 +64,18 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             Bundle args = getArguments();
             int fragmentNumber = args.getInt("fragmentNumber");
-            if (fragmentNumber == 0) {
-                return inflater.inflate(
-                        R.layout.summary, container, false);
-            } else if (fragmentNumber == 1) {
-                return inflater.inflate(
-                        R.layout.stats, container, false);
-            } else {
-                return inflater.inflate(
-                        R.layout.weather, container, false);
+            switch (fragmentNumber) {
+                case 0:
+                    return inflater.inflate(
+                            R.layout.summary, container, false);
+                case 1:
+                    return inflater.inflate(
+                            R.layout.stats, container, false);
+                case 2:
+                    return inflater.inflate(
+                            R.layout.weather, container, false);
             }
+            return inflater.inflate(R.layout.weather, container, false);
         }
     }
 
