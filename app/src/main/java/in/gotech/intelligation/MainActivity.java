@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.support.v4.app.FragmentManager;
 import android.view.Window;
 import android.support.v4.view.PagerTabStrip;
-
 import in.gotech.intelligation.SlidingTabLayout;
 
 import android.graphics.Color;
@@ -71,11 +70,10 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return inflater.inflate(
                             R.layout.stats, container, false);
-                case 2:
-                    return inflater.inflate(
-                            R.layout.weather, container, false);
+                default:
+                    return inflater.inflate(R.layout.weather, container, false);
             }
-            return inflater.inflate(R.layout.weather, container, false);
+
         }
     }
 
