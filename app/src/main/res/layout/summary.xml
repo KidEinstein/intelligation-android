@@ -1,58 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/summary_list_view"
     style="@style/FieldBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/summary_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="18dp">
-
-                <TextView
-                    android:id="@+id/sensor_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_margin="18dp"
-                    android:text="38%"
-                    android:textSize="64sp" />
-
-                <Button
-                    android:id="@+id/refresh_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="Refresh" />
-
-                <TextView
-                    android:id="@+id/crop_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="Rice"
-                    android:textSize="32sp" />
-
-
-            </RelativeLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-
-    </LinearLayout>
-</ScrollView>
+    android:layout_height="match_parent"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="8dp"
+    android:padding="8dp"
+    android:scrollbarStyle="outsideOverlay" />
