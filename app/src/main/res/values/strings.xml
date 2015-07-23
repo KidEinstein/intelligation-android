@@ -9,5 +9,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="number_of_field_sections">Number of field sections</string>
     <string name="submit">Submit</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
 </resources>
 

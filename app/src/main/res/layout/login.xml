@@ -33,7 +33,7 @@
             android:layout_marginTop="80dp"
             android:onClick="login"
             android:padding="18dp"
-            android:text="Login"
+            android:text="@string/login"
             android:textSize="18sp" />
 
         <Button
@@ -46,7 +46,7 @@
             android:layout_marginTop="36dp"
             android:onClick="signUp"
             android:padding="18dp"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textSize="18sp" />
     </LinearLayout>
 </ScrollView>
