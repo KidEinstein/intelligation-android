@@ -1,6 +1,7 @@
 package in.gotech.intelligation;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.support.v4.app.FragmentManager;
 
 import android.graphics.Color;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
+
+        Toast.makeText(this, "Welcome : " + credentialsSharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
+
         mAdapter = new MyAdapter(getSupportFragmentManager());
 
         mPager = (ViewPager) findViewById(R.id.pager);
