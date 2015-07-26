@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class SummaryFragment extends Fragment {
 
     }
 
-    public class Sensor {
+    public static class Sensor {
         int sensorId;
         String cropName;
         int sensorValue;
@@ -68,6 +70,7 @@ public class SummaryFragment extends Fragment {
         public Sensor() {
             Random rn = new Random();
             sensorId = rn.nextInt(100);
+            sensorValue = rn.nextInt(100);
             cropName = "Banana";
 
         }
@@ -78,8 +81,14 @@ public class SummaryFragment extends Fragment {
             return cropName;
         }
 
+        public int getSensorValue() {
+            return sensorValue;
+        }
+
     }
-    public class SummaryListAdapter extends ArrayAdapter<Sensor> {
+
+
+    private class SummaryListAdapter extends ArrayAdapter<Sensor> {
 
         ArrayList<Sensor> sensorArrayList;
         Context mContext;
@@ -93,25 +102,15 @@ public class SummaryFragment extends Fragment {
         }
 
         @Override
+
         public View getView(int position, View convertView, ViewGroup parent) {
-            Sensor currentSensor = sensorArrayList.get(position);
-
-            if (convertView == null) {
-
-                convertView = inflater.inflate(
-                        R.layout.summary_card, parent, false);
-            }
-
-            CardView summaryCardView = (CardView) convertView;
-            TextView sensorValueTextView = (TextView) summaryCardView.findViewById(R.id.sensor_value_text_view);
-
-            Random rn = new Random();
-
-            sensorValueTextView.setText("" + rn.nextInt(100) + "%");
-
-            TextView cropNameTextView = (TextView) summaryCardView.findViewById(R.id.crop_name_text_view);
-
-            return summaryCardView;
+            SummaryView summaryView = (SummaryView) convertView;
+            if (null == summaryView)
+                summaryView = SummaryView.inflate(parent);
+            Object item = getItem(position);
+            summaryView.setItem(getItem(position));
+            return summaryView;
         }
+
     }
 }
