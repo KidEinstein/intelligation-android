@@ -5,41 +5,28 @@ package in.gotech.intelligation;
  */
 
 import android.content.Context;
-import android.hardware.Sensor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.util.EntityUtils;
-
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
 
 public class SummaryFragment extends Fragment {
     SummaryListAdapter summaryListAdapter;
     ArrayList<Sensor> sensorArrayList;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,32 +34,54 @@ public class SummaryFragment extends Fragment {
         ListView summaryListView = (ListView) inflater.inflate(
                 R.layout.summary, container, false);
 
-//        for (int i = 0; i < 10; i++) {
-//            CardView summaryCardView = (CardView) inflater.inflate(
-//                    R.layout.summary_card, summaryLinearLayout, false);
-//
-//            TextView sensorValueTextView = (TextView) summaryCardView.findViewById(R.id.sensor_value_text_view);
-//
-//            Random rn = new Random();
-//
-//            sensorValueTextView.setText("" + rn.nextInt(100) + "%");
-//
-//            summaryLinearLayout.addView(summaryCardView);
-//        }
-
         sensorArrayList = new ArrayList<Sensor>();
 
         summaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, sensorArrayList);
 
         summaryListView.setAdapter(summaryListAdapter);
 
-        new FetchListItems().execute("/request", "1");
-        new FetchListItems().execute("/request", "2");
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        queue.add(getSensorJsonObjectRequest(1));
+        queue.add(getSensorJsonObjectRequest(2));
+
         return summaryListView;
 
     }
 
-    public static class Sensor {
+    public JsonObjectRequest getSensorJsonObjectRequest(int sensor_id) {
+        String url = getString(R.string.server_ip) + "/request?sensor_id=" + sensor_id;
+        return new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        int sensorId = 0;
+                        int sensorValue = 0;
+                        String cropName = null;
+                        try {
+                            sensorId = response.getInt("sensor_id");
+                            sensorValue = response.getInt("current_value");
+                            cropName = response.getString("crop_name");
+                        } catch (Exception e) {
+                            Log.e("SummaryFragment", "Oops! JSON's bad!");
+                        }
+                        Sensor newSensorReading = new Sensor(sensorId, sensorValue, cropName);
+                        sensorArrayList.add(newSensorReading);
+                        summaryListAdapter.notifyDataSetChanged();
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("SummaryFragment", "Oops! Volley's Network's bad!");
+                    }
+                }
+        );
+    }
+
+
+    public class Sensor {
         int sensorId;
         String cropName;
         int sensorValue;
@@ -82,9 +91,11 @@ public class SummaryFragment extends Fragment {
             this.sensorValue = sensorValue;
             this.cropName = cropName;
         }
+
         public int getSensorId() {
             return sensorId;
         }
+
         public String getCropName() {
             return cropName;
         }
@@ -121,43 +132,5 @@ public class SummaryFragment extends Fragment {
 
     }
 
-    public class FetchListItems extends AsyncTask<String, Void, Sensor> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Sensor doInBackground(String... params) {
-            String charset = "UTF-8";
-            String url = getString(R.string.server_ip) + params[0];
-            String sensorId = params[1];
-            InputStream response = null;
-            String responseString = null;
-            try {
-                String query = String.format("sensor_id=%s",
-                        URLEncoder.encode(sensorId, charset));
-                URLConnection connection = new URL(url + "?" + query).openConnection();
-                connection.setRequestProperty("Accept-Charset", charset);
-                response = connection.getInputStream();
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(response, writer, charset);
-                responseString = writer.toString();
-            } catch (Exception e) {
-                Log.e("SummaryFragment", "Oops! Network's bad!");
-            }
-
-            Sensor newSensorReading = new Sensor(Integer.parseInt(sensorId), Integer.parseInt(responseString), "Banana");
-            return newSensorReading;
-
-        }
-
-        @Override
-        protected void onPostExecute(Sensor newSensorReading) {
-            super.onPostExecute(newSensorReading);
-            sensorArrayList.add(newSensorReading);
-            summaryListAdapter.notifyDataSetChanged();
-        }
-    }
 }
+
