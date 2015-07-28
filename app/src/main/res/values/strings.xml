@@ -11,5 +11,6 @@
     <string name="submit">Submit</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
+    <string name="server_ip">http://192.168.1.130:8000</string>
 </resources>
 

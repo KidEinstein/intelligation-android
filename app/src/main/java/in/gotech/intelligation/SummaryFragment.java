@@ -6,11 +6,13 @@ package in.gotech.intelligation;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +25,27 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.util.EntityUtils;
+
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
 public class SummaryFragment extends Fragment {
+    SummaryListAdapter summaryListAdapter;
+    ArrayList<Sensor> sensorArrayList;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View summaryView = inflater.inflate(
-                R.layout.summary, container, false);
 
-        ListView summaryListView = (ListView) summaryView.findViewById(R.id.summary_list_view);
+        ListView summaryListView = (ListView) inflater.inflate(
+                R.layout.summary, container, false);
 
 //        for (int i = 0; i < 10; i++) {
 //            CardView summaryCardView = (CardView) inflater.inflate(
@@ -49,16 +60,15 @@ public class SummaryFragment extends Fragment {
 //            summaryLinearLayout.addView(summaryCardView);
 //        }
 
-        ArrayList<Sensor> sensorArrayList = new ArrayList<Sensor>();
-        for (int i = 0; i < 100; i++) {
-            sensorArrayList.add(new Sensor());
-        }
+        sensorArrayList = new ArrayList<Sensor>();
 
-        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, sensorArrayList);
+        summaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, sensorArrayList);
 
         summaryListView.setAdapter(summaryListAdapter);
 
-        return summaryView;
+        new FetchListItems().execute("/request", "1");
+        new FetchListItems().execute("/request", "2");
+        return summaryListView;
 
     }
 
@@ -67,12 +77,10 @@ public class SummaryFragment extends Fragment {
         String cropName;
         int sensorValue;
 
-        public Sensor() {
-            Random rn = new Random();
-            sensorId = rn.nextInt(100);
-            sensorValue = rn.nextInt(100);
-            cropName = "Banana";
-
+        public Sensor(int sensorId, int sensorValue, String cropName) {
+            this.sensorId = sensorId;
+            this.sensorValue = sensorValue;
+            this.cropName = cropName;
         }
         public int getSensorId() {
             return sensorId;
@@ -107,10 +115,49 @@ public class SummaryFragment extends Fragment {
             SummaryView summaryView = (SummaryView) convertView;
             if (null == summaryView)
                 summaryView = SummaryView.inflate(parent);
-            Object item = getItem(position);
             summaryView.setItem(getItem(position));
             return summaryView;
         }
 
+    }
+
+    public class FetchListItems extends AsyncTask<String, Void, Sensor> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Sensor doInBackground(String... params) {
+            String charset = "UTF-8";
+            String url = getString(R.string.server_ip) + params[0];
+            String sensorId = params[1];
+            InputStream response = null;
+            String responseString = null;
+            try {
+                String query = String.format("sensor_id=%s",
+                        URLEncoder.encode(sensorId, charset));
+                URLConnection connection = new URL(url + "?" + query).openConnection();
+                connection.setRequestProperty("Accept-Charset", charset);
+                response = connection.getInputStream();
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(response, writer, charset);
+                responseString = writer.toString();
+            } catch (Exception e) {
+                Log.e("SummaryFragment", "Oops! Network's bad!");
+            }
+
+            Sensor newSensorReading = new Sensor(Integer.parseInt(sensorId), Integer.parseInt(responseString), "Banana");
+            return newSensorReading;
+
+        }
+
+        @Override
+        protected void onPostExecute(Sensor newSensorReading) {
+            super.onPostExecute(newSensorReading);
+            sensorArrayList.add(newSensorReading);
+            summaryListAdapter.notifyDataSetChanged();
+        }
     }
 }
