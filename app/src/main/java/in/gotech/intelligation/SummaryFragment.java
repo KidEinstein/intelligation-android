@@ -4,7 +4,9 @@ package in.gotech.intelligation;
  * Created by anirudh on 21/07/15.
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,8 +22,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class SummaryFragment extends Fragment {
     SummaryListAdapter summaryListAdapter;
@@ -40,10 +45,15 @@ public class SummaryFragment extends Fragment {
 
         summaryListView.setAdapter(summaryListAdapter);
 
+        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
+
+        HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        queue.add(getSensorJsonObjectRequest(1));
-        queue.add(getSensorJsonObjectRequest(2));
+        for (String s : sensorIdSet) {
+            queue.add(getSensorJsonObjectRequest(Integer.parseInt(s)));
+        }
 
         return summaryListView;
 
