@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.auth.AUTH;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -68,14 +69,19 @@ public class SummaryFragment extends Fragment {
                         int sensorId = 0;
                         int sensorValue = 0;
                         String cropName = null;
+                        boolean autoStatus = false;
+                        boolean motorStatus = false;
                         try {
                             sensorId = response.getInt("sensor_id");
                             sensorValue = response.getInt("current_value");
                             cropName = response.getString("crop_name");
+                            autoStatus = response.getInt("auto") == 1 ? true : false;
+                            motorStatus = response.getInt("motor_status") == 1 ? true : false;
+
                         } catch (Exception e) {
                             Log.e("SummaryFragment", "Oops! JSON's bad!");
                         }
-                        Sensor newSensorReading = new Sensor(sensorId, sensorValue, cropName);
+                        Sensor newSensorReading = new Sensor(sensorId, sensorValue, cropName, autoStatus, motorStatus);
                         sensorArrayList.add(newSensorReading);
                         summaryListAdapter.notifyDataSetChanged();
                     }
@@ -95,11 +101,15 @@ public class SummaryFragment extends Fragment {
         int sensorId;
         String cropName;
         int sensorValue;
+        boolean motorStatus;
+        boolean autoStatus;
 
-        public Sensor(int sensorId, int sensorValue, String cropName) {
+        public Sensor(int sensorId, int sensorValue, String cropName, boolean autoStatus, boolean motorStatus) {
             this.sensorId = sensorId;
             this.sensorValue = sensorValue;
             this.cropName = cropName;
+            this.autoStatus = autoStatus;
+            this.motorStatus = motorStatus;
         }
 
         public int getSensorId() {
@@ -112,6 +122,14 @@ public class SummaryFragment extends Fragment {
 
         public int getSensorValue() {
             return sensorValue;
+        }
+
+        public boolean getAutoStatus() {
+            return autoStatus;
+        }
+
+        public boolean getMotorStatus() {
+            return motorStatus;
         }
 
     }
