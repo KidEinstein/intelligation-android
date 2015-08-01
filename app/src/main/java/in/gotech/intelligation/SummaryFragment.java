@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.auth.AUTH;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -50,10 +49,8 @@ public class SummaryFragment extends Fragment {
 
         HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
         for (String s : sensorIdSet) {
-            queue.add(getSensorJsonObjectRequest(Integer.parseInt(s)));
+            VolleyApplication.getInstance().getRequestQueue().add(getSensorJsonObjectRequest(Integer.parseInt(s)));
         }
 
         return summaryListView;
@@ -75,8 +72,8 @@ public class SummaryFragment extends Fragment {
                             sensorId = response.getInt("sensor_id");
                             sensorValue = response.getInt("current_value");
                             cropName = response.getString("crop_name");
-                            autoStatus = response.getInt("auto") == 1 ? true : false;
-                            motorStatus = response.getInt("motor_status") == 1 ? true : false;
+                            autoStatus = response.getInt("auto") == 1;
+                            motorStatus = response.getInt("motor_status") == 1;
 
                         } catch (Exception e) {
                             Log.e("SummaryFragment", "Oops! JSON's bad!");
