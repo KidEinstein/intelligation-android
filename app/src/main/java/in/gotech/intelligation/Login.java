@@ -68,7 +68,7 @@ public class Login extends AppCompatActivity {
 
                         credentialsEditor.commit();
 
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent i = new Intent(getApplicationContext(), NavDrawerAdapter.class);
                         startActivity(i);
                     }
                 },

@@ -1,23 +1,19 @@
 package in.gotech.intelligation;
 
 
+import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.app.FragmentManager;
 
 import android.graphics.Color;
-import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends Fragment {
 
     private static final int NUM_ITEMS = 3;
 
@@ -27,22 +23,33 @@ public class MainActivity extends AppCompatActivity {
 
     SlidingTabLayout tabs;
 
+    public MainActivity2() {
+
+    }
+
+    public static Fragment newInstance(int position) {
+        Fragment fragment = new MainActivity2();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getActivity().setContentView(R.layout.activity_main);
 
-        SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, AppCompatActivity.MODE_PRIVATE);
 
-        Toast.makeText(this, "Welcome : " + credentialsSharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Welcome : " + credentialsSharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
 
-        mAdapter = new MyAdapter(getSupportFragmentManager());
+        mAdapter = new MyAdapter(getActivity().getSupportFragmentManager());
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager = (ViewPager) getActivity().findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
 
         // Assiging the Sliding Tab Layout View
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs = (SlidingTabLayout) getActivity().findViewById(R.id.tabs);
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -59,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         tabs.setViewPager(mPager);
 
     }
-
 
     public class MyAdapter extends FragmentPagerAdapter {
 

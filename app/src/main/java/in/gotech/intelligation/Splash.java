@@ -36,7 +36,7 @@ public class Splash extends Activity {
                 SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
                 Intent mainIntent;
                 if (credentialsSharedPref.contains("username")) {
-                    mainIntent = new Intent(Splash.this, MainActivity.class);
+                    mainIntent = new Intent(Splash.this, NavigationDrawerActivity.class);
                 } else {
                     mainIntent = new Intent(Splash.this, Login.class);
                 }
