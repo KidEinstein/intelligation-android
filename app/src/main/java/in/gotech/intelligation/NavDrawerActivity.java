@@ -16,25 +16,19 @@
 
 package in.gotech.intelligation;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 /**
@@ -64,14 +58,15 @@ import android.widget.Toast;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class NavigationDrawerActivity extends AppCompatActivity implements NavDrawerAdapter.OnItemClickListener {
+public class NavDrawerActivity extends AppCompatActivity implements NavDrawerAdapter.OnItemClickListener {
     private DrawerLayout mDrawerLayout;
     private RecyclerView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles;
+    private String[] mOptions;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +74,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements NavDr
         setContentView(R.layout.activity_navigation_drawer);
 
         mTitle = mDrawerTitle = getTitle();
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mOptions = getResources().getStringArray(R.array.options_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (RecyclerView) findViewById(R.id.left_drawer);
 
@@ -90,7 +85,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements NavDr
         mDrawerList.setLayoutManager(new LinearLayoutManager(this));
 
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new NavDrawerAdapter(mPlanetTitles, this));
+        mDrawerList.setAdapter(new NavDrawerAdapter(mOptions, this));
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -156,15 +151,29 @@ public class NavigationDrawerActivity extends AppCompatActivity implements NavDr
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = MainActivity.newInstance(position);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        switch (position) {
+            case 0:
+                fragment = new MainFragment();
+                break;
+            case 1:
+                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                fragment = new StatsFragment();
+                break;
+            case 2:
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                fragment = new WeatherFragment();
+                break;
+        }
+
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
 
+
         // update selected item title, then close the drawer
-        setTitle(mPlanetTitles[position]);
+        setTitle(mOptions[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -194,101 +203,5 @@ public class NavigationDrawerActivity extends AppCompatActivity implements NavDr
     }
 
 
-    public static class MainActivity extends Fragment {
-
-        private static final int NUM_ITEMS = 3;
-
-        MyAdapter mAdapter;
-
-        ViewPager mPager;
-
-        SlidingTabLayout tabs;
-
-        public MainActivity() {
-
-        }
-
-        public static Fragment newInstance(int position) {
-            Fragment fragment = new MainActivity();
-            Bundle args = new Bundle();
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.activity_main, container, false);
-
-            SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, AppCompatActivity.MODE_PRIVATE);
-
-            Toast.makeText(getActivity(), "Welcome : " + credentialsSharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
-
-            mAdapter = new MyAdapter(getActivity().getSupportFragmentManager());
-
-            mPager = (ViewPager) rootView.findViewById(R.id.pager);
-
-            mPager.setAdapter(mAdapter);
-
-            // Assiging the Sliding Tab Layout View
-            tabs = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
-
-            // Setting Custom Color for the Scroll bar indicator of the Tab View
-            tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-                @Override
-                public int getIndicatorColor(int position) {
-                    return Color.WHITE;
-                }
-            });
-
-
-            tabs.setDistributeEvenly(true);
-
-            // Setting the ViewPager For the SlidingTabsLayout
-            tabs.setViewPager(mPager);
-
-            return rootView;
-
-        }
-
-        public class MyAdapter extends FragmentPagerAdapter {
-
-            public MyAdapter(FragmentManager fm) {
-                super(fm);
-            }
-
-            @Override
-            public int getCount() {
-                return NUM_ITEMS;
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        return new SummaryFragment();
-                    case 1:
-                        return new StatsFragment();
-                    default:
-                        return new WeatherFragment();
-                }
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position) {
-                    case 0:
-                        return "Summary";
-                    case 1:
-                        return "Statistics";
-                    case 2:
-                        return "Weather";
-                }
-                return "";
-            }
-        }
-
-
-    }
 }
+

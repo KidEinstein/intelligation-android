@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 
 /**
  * Created by anirudh on 20/07/15.
@@ -36,7 +33,7 @@ public class Splash extends Activity {
                 SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
                 Intent mainIntent;
                 if (credentialsSharedPref.contains("username")) {
-                    mainIntent = new Intent(Splash.this, NavigationDrawerActivity.class);
+                    mainIntent = new Intent(Splash.this, NavDrawerActivity.class);
                 } else {
                     mainIntent = new Intent(Splash.this, Login.class);
                 }

@@ -19,7 +19,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by anirudh on 20/07/15.
@@ -68,7 +67,7 @@ public class Login extends AppCompatActivity {
 
                         credentialsEditor.commit();
 
-                        Intent i = new Intent(getApplicationContext(), NavigationDrawerActivity.class);
+                        Intent i = new Intent(getApplicationContext(), NavDrawerActivity.class);
                         startActivity(i);
                         finish();
                     }
