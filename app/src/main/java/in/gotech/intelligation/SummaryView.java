@@ -15,7 +15,6 @@ import android.widget.ToggleButton;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
@@ -33,7 +32,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
     private StringRequest mAutoDisableRequest;
     private StringRequest mMotorEnableRequest;
     private StringRequest mMotorDisableRequest;
-    private JsonObjectRequest mRefreshRequest;
+    private JsonObjectLongRequest mRefreshRequest;
 
 
     public SummaryView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -84,9 +83,9 @@ public class SummaryView extends android.support.v7.widget.CardView {
         });
     }
 
-    private JsonObjectRequest getRefreshJsonObjectRequest(int sensorId) {
+    private JsonObjectLongRequest getRefreshJsonObjectRequest(int sensorId) {
         String url = getContext().getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
-        return new JsonObjectRequest(url,
+        return new JsonObjectLongRequest(url,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
