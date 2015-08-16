@@ -88,7 +88,7 @@ public class SummaryFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("SummaryFragment", "Oops! Volley's Network's bad!");
+                        Log.e("SummaryFragment", "Oops! Volley's Network's bad!\n" + error);
                     }
                 }
         );

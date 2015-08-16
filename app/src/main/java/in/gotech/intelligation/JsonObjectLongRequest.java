@@ -35,7 +35,7 @@ public class JsonObjectLongRequest extends JsonObjectRequest {
      */
     public JsonObjectLongRequest(String url, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         super(url, listener, errorListener);
-        setRetryPolicy(new DefaultRetryPolicy(10000,
+        setRetryPolicy(new DefaultRetryPolicy(20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }

@@ -7,110 +7,60 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="36dp"
-        android:hint="@string/name"
-        android:inputType="textCapWords" />
+        <EditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="36dp"
+            android:hint="@string/name"
+            android:inputType="textCapWords" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:hint="@string/mobile_number"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/mobile_number_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:hint="@string/mobile_number"
+            android:inputType="number" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:hint="@string/aadhaar_id"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/aadhaar_id_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:hint="@string/aadhaar_id"
+            android:inputType="number" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="#AED581"
-        android:orientation="vertical"
-        android:padding="18dp">
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="18dp"
-            android:text="@string/number_of_field_sections"
-            android:textColor="@android:color/black"
+            android:layout_margin="36dp"
+            android:onClick="submitSignUp"
+            android:padding="18dp"
+            android:text="@string/submit"
             android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:width="50dp"
-                android:height="50dp"
-                android:onClick="decrement"
-                android:text="-"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/number_of_parts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:width="50dp"
-                android:height="50dp"
-                android:onClick="increment"
-                android:text="+"
-                android:textSize="18sp" />
-
-
-        </LinearLayout>
     </LinearLayout>
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="36dp"
-        android:padding="18dp"
-        android:text="@string/submit"
-        android:textSize="18sp" />
-
-</LinearLayout>
 </ScrollView>

@@ -16,6 +16,8 @@
 
 package in.gotech.intelligation;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -157,19 +159,26 @@ public class NavDrawerActivity extends AppCompatActivity implements NavDrawerAda
         switch (position) {
             case 0:
                 fragment = new MainFragment();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
                 break;
             case 1:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 fragment = new StatsFragment();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
                 break;
             case 2:
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-                fragment = new WeatherFragment();
+                SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
+                credentialsEditor.clear();
+                credentialsEditor.commit();
+                Intent i = new Intent(this, Login.class);
+                startActivity(i);
+                finish();
                 break;
         }
-
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
 
 
         // update selected item title, then close the drawer

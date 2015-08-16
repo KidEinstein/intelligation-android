@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
@@ -26,10 +29,13 @@ import java.util.HashSet;
 public class Login extends AppCompatActivity {
     public static final String PREFS_NAME = "Credentials";
 
+    Button loginButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        loginButton = (Button) findViewById(R.id.login_button);
     }
 
     public void signUp(View v) {
@@ -39,7 +45,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void login(View v) {
-
+        loginButton.setEnabled(false);
         final EditText usernameEditText = (EditText) findViewById(R.id.aadhaar_id_edit_text);
         final EditText passwordEditText = (EditText) findViewById(R.id.password_edit_text);
 
@@ -76,14 +82,28 @@ public class Login extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (error.networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
-                            Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
-                        } else if (error.networkResponse.statusCode == HttpStatus.SC_FORBIDDEN) {
-                            Toast.makeText(getApplicationContext(), "Wrong aadhaar id", Toast.LENGTH_SHORT).show();
+                        loginButton.setEnabled(true);
+                        if (error.networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                Toast.makeText(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                         }
+
+                        if (error.networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                            Toast.makeText(getApplicationContext(), "Wrong Aadhaar ID or password", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        Toast.makeText(getApplicationContext(), "Network Error! Try again after some time", Toast.LENGTH_SHORT).show();
+
+
                     }
                 }
+
         );
+
+        credentialVerificationRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
