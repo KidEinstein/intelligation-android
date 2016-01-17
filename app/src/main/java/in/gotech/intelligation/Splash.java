@@ -23,7 +23,6 @@ public class Splash extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.splashscreen);
-
     /* New Handler to start the Menu-Activity
      * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable() {

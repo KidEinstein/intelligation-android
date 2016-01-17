@@ -16,22 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SummaryFragment extends Fragment {
-    SummaryListAdapter summaryListAdapter;
-    ArrayList<Sensor> sensorArrayList;
+    SummaryListAdapter mSummaryListAdapter;
+    ArrayList<Sensor> mSensorArrayList;
 
     @Nullable
     @Override
@@ -40,58 +34,40 @@ public class SummaryFragment extends Fragment {
         ListView summaryListView = (ListView) inflater.inflate(
                 R.layout.summary, container, false);
 
-        sensorArrayList = new ArrayList<Sensor>();
+        mSensorArrayList = new ArrayList<Sensor>();
 
-        summaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, sensorArrayList);
+        mSummaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, mSensorArrayList);
 
-        summaryListView.setAdapter(summaryListAdapter);
+        summaryListView.setAdapter(mSummaryListAdapter);
 
         SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
 
         HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
 
         for (String s : sensorIdSet) {
-            VolleyApplication.getInstance().getRequestQueue().add(getSensorJsonObjectRequest(Integer.parseInt(s)));
+            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
         }
 
         return summaryListView;
 
     }
 
-    public JsonObjectRequest getSensorJsonObjectRequest(int sensorId) {
+    public JsonObjectSensorRequest getSensorJsonObjectRequest(int sensorId) {
         String url = getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
-        return new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
+        return new JsonObjectSensorRequest(url,
+                new SensorResponseListener() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        int sensorId = 0;
-                        int sensorValue = 0;
-                        String cropName = null;
-                        boolean autoStatus = false;
-                        boolean motorStatus = false;
-                        try {
-                            sensorId = response.getInt("sensor_id");
-                            sensorValue = response.getInt("current_value");
-                            cropName = response.getString("crop_name");
-                            autoStatus = response.getInt("auto") == 1;
-                            motorStatus = response.getInt("motor_status") == 1;
-
-                        } catch (Exception e) {
-                            Log.e("SummaryFragment", "Oops! JSON's bad!");
-                        }
-                        Sensor newSensorReading = new Sensor(sensorId, sensorValue, cropName, autoStatus, motorStatus);
-                        sensorArrayList.add(newSensorReading);
-                        summaryListAdapter.notifyDataSetChanged();
+                    void onNewSensorReading(Sensor newSensorReading) {
+                        mSensorArrayList.add(newSensorReading);
+                        mSummaryListAdapter.notifyDataSetChanged();
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("SummaryFragment", "Oops! Volley's Network's bad!\n" + error);
                     }
-                }
-        );
+                });
     }
 
     private class SummaryListAdapter extends ArrayAdapter<Sensor> {

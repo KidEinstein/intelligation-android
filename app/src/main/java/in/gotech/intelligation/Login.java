@@ -18,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 
 import java.util.HashSet;
@@ -90,7 +89,7 @@ public class Login extends AppCompatActivity {
                             }
                         }
 
-                        if (error.networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                        if (error.networkResponse.statusCode == 401) {
                             Toast.makeText(getApplicationContext(), "Wrong Aadhaar ID or password", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -105,7 +104,7 @@ public class Login extends AppCompatActivity {
 
         credentialVerificationRequest.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = VolleyApplication.getInstance().getRequestQueue();
 
         queue.add(credentialVerificationRequest);
     }

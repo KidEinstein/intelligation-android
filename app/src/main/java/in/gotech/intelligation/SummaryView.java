@@ -17,8 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONObject;
-
 /**
  * Created by anirudh on 27/07/15.
  */
@@ -32,7 +30,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
     private StringRequest mAutoDisableRequest;
     private StringRequest mMotorEnableRequest;
     private StringRequest mMotorDisableRequest;
-    private JsonObjectLongRequest mRefreshRequest;
+    private JsonObjectSensorRequest mRefreshRequest;
 
 
     public SummaryView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -83,33 +81,16 @@ public class SummaryView extends android.support.v7.widget.CardView {
         });
     }
 
-    private JsonObjectLongRequest getRefreshJsonObjectRequest(int sensorId) {
+    private JsonObjectSensorRequest getRefreshJsonObjectRequest(int sensorId) {
         String url = getContext().getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
-        return new JsonObjectLongRequest(url,
-                new Response.Listener<JSONObject>() {
+        return new JsonObjectSensorRequest(url,
+                new SensorResponseListener() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        int sensorId = 0;
-                        int sensorValue = 0;
-                        String cropName = null;
-                        boolean autoStatus = false;
-                        boolean motorStatus = false;
-                        try {
-                            sensorId = response.getInt("sensor_id");
-                            sensorValue = response.getInt("current_value");
-                            cropName = response.getString("crop_name");
-                            autoStatus = response.getInt("auto") == 1;
-                            motorStatus = response.getInt("motor_status") == 1;
-
-                        } catch (Exception e) {
-                            Log.e("SummaryFragment", "Oops! JSON's bad!");
-                        }
-                        Sensor newSensorReading = new Sensor(sensorId, sensorValue, cropName, autoStatus, motorStatus);
+                    void onNewSensorReading(Sensor newSensorReading) {
                         Toast.makeText(getContext(), "Refereshed", Toast.LENGTH_SHORT).show();
                         setItem(newSensorReading);
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

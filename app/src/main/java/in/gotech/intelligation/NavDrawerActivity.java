@@ -164,7 +164,7 @@ public class NavDrawerActivity extends AppCompatActivity implements NavDrawerAda
                 break;
             case 1:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-                fragment = new StatsFragment();
+                fragment = new SettingsFragment();
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
                 break;
@@ -173,7 +173,7 @@ public class NavDrawerActivity extends AppCompatActivity implements NavDrawerAda
                 SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
                 credentialsEditor.clear();
-                credentialsEditor.commit();
+                credentialsEditor.apply();
                 Intent i = new Intent(this, Login.class);
                 startActivity(i);
                 finish();

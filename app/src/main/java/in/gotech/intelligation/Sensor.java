@@ -9,13 +9,17 @@ public class Sensor {
     int sensorValue;
     boolean motorStatus;
     boolean autoStatus;
+    int pinNumber;
+    boolean editing;
 
-    public Sensor(int sensorId, int sensorValue, String cropName, boolean autoStatus, boolean motorStatus) {
+    public Sensor(int sensorId, int sensorValue, String cropName, boolean autoStatus, boolean motorStatus, int pinNumber) {
         this.sensorId = sensorId;
         this.sensorValue = sensorValue;
         this.cropName = cropName;
         this.autoStatus = autoStatus;
         this.motorStatus = motorStatus;
+        this.pinNumber = pinNumber;
+        this.editing = false;
     }
 
     public int getSensorId() {

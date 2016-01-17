@@ -55,7 +55,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-
         tabs.setDistributeEvenly(true);
 
         // Setting the ViewPager For the SlidingTabsLayout
