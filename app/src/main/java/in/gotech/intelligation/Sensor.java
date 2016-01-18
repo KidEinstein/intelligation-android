@@ -11,15 +11,20 @@ public class Sensor {
     boolean autoStatus;
     int pinNumber;
     boolean editing;
+    boolean newSensor;
 
+    public Sensor() {
+        this.editing = false;
+        this.newSensor = false;
+    }
     public Sensor(int sensorId, int sensorValue, String cropName, boolean autoStatus, boolean motorStatus, int pinNumber) {
+        this();
         this.sensorId = sensorId;
         this.sensorValue = sensorValue;
         this.cropName = cropName;
         this.autoStatus = autoStatus;
         this.motorStatus = motorStatus;
         this.pinNumber = pinNumber;
-        this.editing = false;
     }
 
     public int getSensorId() {

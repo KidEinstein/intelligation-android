@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,15 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by anirudh on 16/01/16.
@@ -28,7 +29,7 @@ import java.util.HashSet;
 public class SettingsFragment extends Fragment{
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
-    RecyclerView.Adapter mSummaryListAdapter;
+    RecyclerView.Adapter mSettingsListAdapter;
     ArrayList<Sensor> mSensorArrayList;
     ArrayList<CharSequence> mCrops;
     FrameLayout mSettingsView;
@@ -53,7 +54,7 @@ public class SettingsFragment extends Fragment{
                     @Override
                     void onNewSensorReading(Sensor newSensorReading) {
                         mSensorArrayList.add(newSensorReading);
-                        mSummaryListAdapter.notifyDataSetChanged();
+                        mSettingsListAdapter.notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener() {
@@ -90,8 +91,32 @@ public class SettingsFragment extends Fragment{
                         mLayoutManager = new LinearLayoutManager(getContext());
                         mRecyclerView.setLayoutManager(mLayoutManager);
 
-                        mSummaryListAdapter = new SettingsRecyclerViewAdapter(mSensorArrayList, getContext(), crops);
-                        mRecyclerView.setAdapter(mSummaryListAdapter);
+                        mSettingsListAdapter = new SettingsRecyclerViewAdapter(mSensorArrayList, getContext(), crops);
+                        mRecyclerView.setAdapter(mSettingsListAdapter);
+
+                        FloatingActionButton fab = (FloatingActionButton) mSettingsView.findViewById(R.id.setting_fab);
+                        fab.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Sensor s = new Sensor();
+                                s.newSensor = true;
+                                s.editing = true;
+                                TreeSet<Integer> pinSet = new TreeSet<>();
+                                for (int i = 2; i <= 5; i++) {
+                                    pinSet.add(i);
+                                }
+                                for (Sensor sensor : mSensorArrayList) {
+                                    pinSet.remove(sensor.pinNumber);
+                                }
+                                if (pinSet.isEmpty()) {
+                                    Toast.makeText(mSettingsView.getContext(), "Cannot add any more sensors", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                s.pinNumber = pinSet.first();
+                                mSensorArrayList.add(0, s);
+                                mSettingsListAdapter.notifyDataSetChanged();
+                            }
+                        });
 
                     }
                 },

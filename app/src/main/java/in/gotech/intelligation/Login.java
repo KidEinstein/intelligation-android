@@ -67,7 +67,6 @@ public class Login extends AppCompatActivity {
                                 Log.e("Login", "Error parsing sensor ids");
                             }
                         }
-
                         credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
 
                         credentialsEditor.commit();

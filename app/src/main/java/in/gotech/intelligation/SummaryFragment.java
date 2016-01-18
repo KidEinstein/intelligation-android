@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +27,20 @@ import java.util.HashSet;
 
 public class SummaryFragment extends Fragment {
     SummaryListAdapter mSummaryListAdapter;
+    ListView summaryListView;
     ArrayList<Sensor> mSensorArrayList;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    HashSet<String> mSensorIdSet;
+    int mPendingRequests;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        ListView summaryListView = (ListView) inflater.inflate(
+        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(
                 R.layout.summary, container, false);
+
+        summaryListView = (ListView) mSwipeRefreshLayout.findViewById(R.id.summary_list_view);
 
         mSensorArrayList = new ArrayList<Sensor>();
 
@@ -42,15 +50,22 @@ public class SummaryFragment extends Fragment {
 
         SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
 
-        HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
+        mSensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
 
-        for (String s : sensorIdSet) {
-            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
-        }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
 
-        return summaryListView;
+        refresh();
+
+
+        return mSwipeRefreshLayout;
 
     }
+
 
     public JsonObjectSensorRequest getSensorJsonObjectRequest(int sensorId) {
         String url = getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
@@ -60,6 +75,10 @@ public class SummaryFragment extends Fragment {
                     void onNewSensorReading(Sensor newSensorReading) {
                         mSensorArrayList.add(newSensorReading);
                         mSummaryListAdapter.notifyDataSetChanged();
+                        mPendingRequests--;
+                        if (mPendingRequests == 0) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -92,8 +111,16 @@ public class SummaryFragment extends Fragment {
             summaryView.setItem(getItem(position));
             return summaryView;
         }
-
     }
 
+    void refresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSensorArrayList.clear();
+        mPendingRequests = mSensorIdSet.size();
+        for (String s : mSensorIdSet) {
+            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
+        }
+
+    }
 }
 
