@@ -27,6 +27,6 @@ public abstract class CropsResponseListener implements Response.Listener<JSONArr
         onCropsResponse(crops);
     }
 
-    abstract void onCropsResponse(ArrayList crops);
+    abstract void onCropsResponse(ArrayList<CharSequence> crops);
 
 }

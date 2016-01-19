@@ -64,89 +64,96 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
         if (currentSensor.editing) {
             holder.editImageButton.setImageDrawable(saveDrawable);
             holder.cropSpinner.setEnabled(true);
+            holder.deleteImageButton.setClickable(true);
+            holder.deleteImageButton.setVisibility(View.VISIBLE);
         } else {
             holder.editImageButton.setImageDrawable(editDrawable);
+            holder.cropSpinner.setEnabled(false);
+            holder.deleteImageButton.setClickable(false);
+            holder.deleteImageButton.setVisibility(View.INVISIBLE);
         }
         holder.editImageButton.setTag(currentSensor);
+        holder.deleteImageButton.setTag(currentSensor);
     }
 
     @Override
     public SettingsCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.settings_card, parent, false);
-        SettingsCardViewHolder vh = new SettingsCardViewHolder(v, parent.getContext(), mCrops);
+        SettingsCardViewHolder vh = new SettingsCardViewHolder(v);
         return vh;
     }
 
-    public static class SettingsCardViewHolder extends RecyclerView.ViewHolder {
+    public class SettingsCardViewHolder extends RecyclerView.ViewHolder {
         public Spinner cropSpinner;
         public TextView pinNumberTextView;
         public ImageButton editImageButton;
-        private Context mContext;
         public ImageButton deleteImageButton;
 
-        public SettingsCardViewHolder(final View settingsCardView, Context context, ArrayList<CharSequence> crops) {
+        public SettingsCardViewHolder(final View settingsCardView) {
             super(settingsCardView);
-            mContext = context;
             cropSpinner = (Spinner) settingsCardView.findViewById(R.id.crop_name_spinner);
             // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, crops);
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, mCrops);
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // Apply the adapter to the spinner
             cropSpinner.setAdapter(adapter);
-            cropSpinner.setEnabled(false);
+            pinNumberTextView = (TextView) settingsCardView.findViewById(R.id.pin_number_text_view);
             editImageButton = (ImageButton) settingsCardView.findViewById(R.id.edit_image_button);
+
             deleteImageButton = (ImageButton) settingsCardView.findViewById(R.id.delete_image_button);
-            deleteImageButton.setClickable(false);
-            deleteImageButton.setVisibility(View.INVISIBLE);
-            deleteImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Sensor currentSensor = (Sensor) editImageButton.getTag();
-                    final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
-                    String aadhaar_id = credentialsSharedPref.getString("username", "");
-                    String url = mContext.getString(R.string.server_ip) + "/delete_sensor?aadhaar_id=" + aadhaar_id + "&sensor_id=" + currentSensor.sensorId;
-                    JsonArrayRequest deleteSensorRequest = new JsonArrayRequest(url,
-                            new Response.Listener<JSONArray>() {
-                                @Override
-                                public void onResponse(JSONArray response) {
-                                    editImageButton.setImageDrawable(editDrawable);
-                                    settingsCardView.setVisibility(View.GONE);
-                                    SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
+            deleteImageButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final int position = getAdapterPosition();
+                            Sensor currentSensor = mSensors.get(position);
+                            final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
+                            String aadhaar_id = credentialsSharedPref.getString("username", "");
+                            String url = mContext.getString(R.string.server_ip) + "/delete_sensor?aadhaar_id=" + aadhaar_id + "&sensor_id=" + currentSensor.sensorId;
+                            JsonArrayRequest deleteSensorRequest = new JsonArrayRequest(url,
+                                    new Response.Listener<JSONArray>() {
+                                        @Override
+                                        public void onResponse(JSONArray response) {
+                                            mSensors.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, mSensors.size());
 
-                                    HashSet<String> sensorIdSet = new HashSet<String>();
+                                            SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
 
-                                    for (int i = 0; i < response.length(); i++) {
-                                        try {
-                                            sensorIdSet.add(response.getJSONObject(i).getString("sensor_id"));
-                                        } catch (Exception e) {
-                                            Log.e("Login", "Error parsing sensor ids");
+                                            HashSet<String> sensorIdSet = new HashSet<>();
+
+                                            for (int i = 0; i < response.length(); i++) {
+                                                try {
+                                                    sensorIdSet.add(response.getJSONObject(i).getString("sensor_id"));
+                                                } catch (Exception e) {
+                                                    Log.e("Login", "Error parsing sensor ids");
+                                                }
+                                            }
+                                            credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
+                                            credentialsEditor.commit();
+
+                                            Toast.makeText(mContext, "Sensor deleted", Toast.LENGTH_SHORT).show();
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Log.e("SettingsRecyclerView", "Oops! Volley's Network's bad!");
                                         }
                                     }
-                                    credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
-                                    credentialsEditor.commit();
+                            );
+                            VolleyApplication.getInstance().getRequestQueue().add(deleteSensorRequest);
+                        }
+                    }
+            );
 
-                                    Toast.makeText(mContext, "Sensor deleted", Toast.LENGTH_SHORT).show();
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("SettingsRecyclerView", "Oops! Volley's Network's bad!");
-                                }
-                            }
-                    );
-                    VolleyApplication.getInstance().getRequestQueue().add(deleteSensorRequest);
-
-                }
-            });
-            pinNumberTextView = (TextView) settingsCardView.findViewById(R.id.pin_number_text_view);
             editImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Sensor currentSensor = (Sensor) v.getTag();
+                    int position = getAdapterPosition();
+                    final Sensor currentSensor = mSensors.get(position);
                     if (currentSensor.newSensor) {
-
                         int cropId = cropSpinner.getSelectedItemPosition() + 1;
                         final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
                         String aadhaar_id = credentialsSharedPref.getString("username", "");
@@ -169,9 +176,12 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                                         credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
                                         credentialsEditor.commit();
                                         Toast.makeText(mContext, "New sensor added", Toast.LENGTH_SHORT).show();
+                                        currentSensor.newSensor = false;
+                                        currentSensor.editing = false;
                                         cropSpinner.setEnabled(false);
                                         editImageButton.setImageDrawable(editDrawable);
-                                        currentSensor.newSensor = false;
+                                        deleteImageButton.setClickable(false);
+                                        deleteImageButton.setVisibility(View.INVISIBLE);
                                     }
                                 },
                                 new Response.ErrorListener() {
@@ -191,6 +201,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
+                                        currentSensor.editing = false;
                                         Toast.makeText(mContext, "Settings changed", Toast.LENGTH_SHORT).show();
                                         editImageButton.setImageDrawable(editDrawable);
                                         cropSpinner.setEnabled(false);
@@ -207,6 +218,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                         );
                         VolleyApplication.getInstance().getRequestQueue().add(editSensorRequest);
                     } else {
+                        currentSensor.editing = true;
                         deleteImageButton.setClickable(true);
                         deleteImageButton.setVisibility(View.VISIBLE);
                         editImageButton.setImageDrawable(saveDrawable);

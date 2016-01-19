@@ -61,7 +61,6 @@ public class SummaryFragment extends Fragment {
 
         refresh();
 
-
         return mSwipeRefreshLayout;
 
     }

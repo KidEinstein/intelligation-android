@@ -20,7 +20,6 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -65,25 +64,27 @@ public class SettingsFragment extends Fragment{
                 });
     }
 
+    void getSensors() {
+        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
+
+        HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
+
+        for (String s : sensorIdSet) {
+            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
+        }
+    }
+
     public JsonArrayCropRequest getCropsJsonArrayRequest() {
         String url = getString(R.string.server_ip) + "/retrieve_all_crops";
         return new JsonArrayCropRequest(url,
                 new CropsResponseListener() {
                     @Override
-                    void onCropsResponse(ArrayList crops) {
+                    void onCropsResponse(ArrayList<CharSequence> crops) {
                         mCrops.addAll(crops);
 
-                        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
+                        View settingsRecyclerView = LayoutInflater.from(SettingsFragment.this.getContext()).inflate(R.layout.settings_recycler_view, mSettingsView, false);
 
-                        HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
-
-                        for (String s : sensorIdSet) {
-                            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
-                        }
-
-                        View v = LayoutInflater.from(SettingsFragment.this.getContext()).inflate(R.layout.settings_recycler_view, mSettingsView, false);
-
-                        mSettingsView.addView(v);
+                        mSettingsView.addView(settingsRecyclerView);
 
                         mRecyclerView = (RecyclerView) mSettingsView.findViewById(R.id.settings_recycler_view);
                         mRecyclerView.setHasFixedSize(true);
@@ -93,6 +94,8 @@ public class SettingsFragment extends Fragment{
 
                         mSettingsListAdapter = new SettingsRecyclerViewAdapter(mSensorArrayList, getContext(), crops);
                         mRecyclerView.setAdapter(mSettingsListAdapter);
+
+                        getSensors();
 
                         FloatingActionButton fab = (FloatingActionButton) mSettingsView.findViewById(R.id.setting_fab);
                         fab.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +112,7 @@ public class SettingsFragment extends Fragment{
                                     pinSet.remove(sensor.pinNumber);
                                 }
                                 if (pinSet.isEmpty()) {
-                                    Toast.makeText(mSettingsView.getContext(), "Cannot add any more sensors", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Cannot add any more sensors", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 s.pinNumber = pinSet.first();
