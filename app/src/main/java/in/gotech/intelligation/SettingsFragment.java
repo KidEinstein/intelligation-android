@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -67,7 +68,7 @@ public class SettingsFragment extends Fragment{
     void getSensors() {
         SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
 
-        HashSet<String> sensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
+        Set<String> sensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
 
         for (String s : sensorIdSet) {
             getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();

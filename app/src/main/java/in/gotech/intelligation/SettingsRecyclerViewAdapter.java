@@ -18,12 +18,17 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by anirudh on 16/01/16.
@@ -107,7 +112,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                         @Override
                         public void onClick(View v) {
                             final int position = getAdapterPosition();
-                            Sensor currentSensor = mSensors.get(position);
+                            final Sensor currentSensor = mSensors.get(position);
                             final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
                             String aadhaar_id = credentialsSharedPref.getString("username", "");
                             String url = mContext.getString(R.string.server_ip) + "/delete_sensor?aadhaar_id=" + aadhaar_id + "&sensor_id=" + currentSensor.sensorId;
@@ -121,7 +126,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
 
                                             SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
 
-                                            HashSet<String> sensorIdSet = new HashSet<>();
+                                            HashSet<String> sensorIdSet = new HashSet<String>();
 
                                             for (int i = 0; i < response.length(); i++) {
                                                 try {
@@ -158,26 +163,42 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                         final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
                         String aadhaar_id = credentialsSharedPref.getString("username", "");
                         String url = mContext.getString(R.string.server_ip) + "/add_sensor?aadhaar_id=" + aadhaar_id + "&crop_id=" + cropId + "&pin_no=" + currentSensor.pinNumber;
-                        JsonArrayRequest addSensorRequest = new JsonArrayRequest(url,
-                                new Response.Listener<JSONArray>() {
+                        JsonObjectRequest addSensorRequest = new JsonObjectRequest(url,
+                                new Response.Listener<JSONObject>() {
                                     @Override
-                                    public void onResponse(JSONArray response) {
+                                    public void onResponse(JSONObject response) {
                                         SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
 
-                                        HashSet<String> sensorIdSet = new HashSet<String>();
+                                        HashSet<String> sensorIdSet = new HashSet<>();
+                                        JSONArray sensors;
+                                        try {
+                                            sensors = response.getJSONArray("sensors");
+                                        } catch (JSONException e) {
+                                            Log.e("SettingsFragment", "Invalid JSON");
+                                            return;
+                                        }
 
-                                        for (int i = 0; i < response.length(); i++) {
+                                        for (int i = 0; i < sensors.length(); i++) {
                                             try {
-                                                sensorIdSet.add(response.getJSONObject(i).getString("sensor_id"));
+                                                sensorIdSet.add(sensors.getJSONObject(i).getString("sensor_id"));
                                             } catch (Exception e) {
-                                                Log.e("Login", "Error parsing sensor ids");
+                                                Log.e("SettingsFragment", "Error parsing sensor ids");
                                             }
                                         }
                                         credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
                                         credentialsEditor.commit();
-                                        Toast.makeText(mContext, "New sensor added", Toast.LENGTH_SHORT).show();
+
                                         currentSensor.newSensor = false;
                                         currentSensor.editing = false;
+                                        try {
+                                            currentSensor.sensorId = Integer.parseInt(response.getString("insertId"));
+                                        } catch (JSONException e) {
+                                            Log.e("SettingsFragment", "Invalid JSON");
+                                            return;
+                                        }
+
+                                        Toast.makeText(mContext, "New sensor added", Toast.LENGTH_SHORT).show();
+
                                         cropSpinner.setEnabled(false);
                                         editImageButton.setImageDrawable(editDrawable);
                                         deleteImageButton.setClickable(false);

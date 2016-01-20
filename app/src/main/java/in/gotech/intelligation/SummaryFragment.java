@@ -24,13 +24,14 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 public class SummaryFragment extends Fragment {
     SummaryListAdapter mSummaryListAdapter;
     ListView summaryListView;
     ArrayList<Sensor> mSensorArrayList;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    HashSet<String> mSensorIdSet;
+    Set<String> mSensorIdSet;
     int mPendingRequests;
 
     @Nullable
@@ -50,7 +51,7 @@ public class SummaryFragment extends Fragment {
 
         SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
 
-        mSensorIdSet = (HashSet<String>) credentialsSharedPref.getStringSet("sensor_ids", null);
+        mSensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
