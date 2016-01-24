@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.gotech.intelligation;
+package in.gotech.intelligation.navdrawer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +32,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import in.gotech.intelligation.MainFragment;
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.VolleyApplication;
+import in.gotech.intelligation.login.Login;
+import in.gotech.intelligation.settings.SettingsFragment;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -170,7 +176,7 @@ public class NavDrawerActivity extends AppCompatActivity implements NavDrawerAda
                 break;
             case 2:
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-                SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences credentialsSharedPref = getSharedPreferences(VolleyApplication.PREFS_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
                 credentialsEditor.clear();
                 credentialsEditor.apply();

@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,8 +27,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.Sensor;
+import in.gotech.intelligation.VolleyApplication;
+import in.gotech.intelligation.login.Login;
 
 /**
  * Created by anirudh on 16/01/16.
@@ -113,7 +116,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                         public void onClick(View v) {
                             final int position = getAdapterPosition();
                             final Sensor currentSensor = mSensors.get(position);
-                            final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
+                            final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(VolleyApplication.PREFS_NAME, Context.MODE_PRIVATE);
                             String aadhaar_id = credentialsSharedPref.getString("username", "");
                             String url = mContext.getString(R.string.server_ip) + "/delete_sensor?aadhaar_id=" + aadhaar_id + "&sensor_id=" + currentSensor.sensorId;
                             JsonArrayRequest deleteSensorRequest = new JsonArrayRequest(url,
@@ -160,7 +163,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                     final Sensor currentSensor = mSensors.get(position);
                     if (currentSensor.newSensor) {
                         int cropId = cropSpinner.getSelectedItemPosition() + 1;
-                        final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(Login.PREFS_NAME, Context.MODE_PRIVATE);
+                        final SharedPreferences credentialsSharedPref = mContext.getSharedPreferences(VolleyApplication.PREFS_NAME, Context.MODE_PRIVATE);
                         String aadhaar_id = credentialsSharedPref.getString("username", "");
                         String url = mContext.getString(R.string.server_ip) + "/add_sensor?aadhaar_id=" + aadhaar_id + "&crop_id=" + cropId + "&pin_no=" + currentSensor.pinNumber;
                         JsonObjectRequest addSensorRequest = new JsonObjectRequest(url,

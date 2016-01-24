@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.network;
 
 import android.util.Log;
 
@@ -27,6 +27,6 @@ public abstract class CropsResponseListener implements Response.Listener<JSONArr
         onCropsResponse(crops);
     }
 
-    abstract void onCropsResponse(ArrayList<CharSequence> crops);
+    public abstract void onCropsResponse(ArrayList<CharSequence> crops);
 
 }

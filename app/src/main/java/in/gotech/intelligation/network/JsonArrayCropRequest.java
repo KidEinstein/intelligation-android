@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.network;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -6,6 +6,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import in.gotech.intelligation.VolleyApplication;
 
 /**
  * Created by anirudh on 17/01/16.
@@ -101,7 +103,7 @@ public class JsonArrayCropRequest extends JsonArrayRequest{
                 listener, errorListener);
     }
 
-    void fetchCrops() {
+    public void fetchCrops() {
         RequestQueue requestQueue = VolleyApplication.getInstance().getRequestQueue();
         requestQueue.add(this);
     }

@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.signup;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,9 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.VolleyApplication;
 
 /**
  * Created by anirudh on 20/07/15.

@@ -4,14 +4,14 @@ package in.gotech.intelligation;
  * Created by anirudh on 09/08/15.
  */
 public class Sensor {
-    int sensorId;
-    String cropName;
-    int sensorValue;
-    boolean motorStatus;
-    boolean autoStatus;
-    int pinNumber;
-    boolean editing;
-    boolean newSensor;
+    public int sensorId;
+    public String cropName;
+    public int sensorValue;
+    public boolean motorStatus;
+    public boolean autoStatus;
+    public int pinNumber;
+    public boolean editing;
+    public boolean newSensor;
 
     public Sensor() {
         this.editing = false;

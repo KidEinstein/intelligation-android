@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.summary;
 
 /**
  * Created by anirudh on 21/07/15.
@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -23,8 +22,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
+
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.Sensor;
+import in.gotech.intelligation.VolleyApplication;
+import in.gotech.intelligation.login.Login;
+import in.gotech.intelligation.network.JsonObjectSensorRequest;
+import in.gotech.intelligation.network.SensorResponseListener;
+import in.gotech.intelligation.util.SensorRequest;
 
 public class SummaryFragment extends Fragment {
     SummaryListAdapter mSummaryListAdapter;
@@ -43,15 +49,11 @@ public class SummaryFragment extends Fragment {
 
         summaryListView = (ListView) mSwipeRefreshLayout.findViewById(R.id.summary_list_view);
 
-        mSensorArrayList = new ArrayList<Sensor>();
+        mSensorArrayList = new ArrayList<>();
 
         mSummaryListAdapter = new SummaryListAdapter(getActivity(), R.layout.summary_card, mSensorArrayList);
 
         summaryListView.setAdapter(mSummaryListAdapter);
-
-        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
-
-        mSensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -72,7 +74,7 @@ public class SummaryFragment extends Fragment {
         return new JsonObjectSensorRequest(url,
                 new SensorResponseListener() {
                     @Override
-                    void onNewSensorReading(Sensor newSensorReading) {
+                    public void onNewSensorReading(Sensor newSensorReading) {
                         mSensorArrayList.add(newSensorReading);
                         mSummaryListAdapter.notifyDataSetChanged();
                         mPendingRequests--;
@@ -114,13 +116,20 @@ public class SummaryFragment extends Fragment {
     }
 
     void refresh() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        mSensorArrayList.clear();
-        mPendingRequests = mSensorIdSet.size();
-        for (String s : mSensorIdSet) {
-            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
-        }
-
+        SensorRequest sr = new SensorRequest() {
+            @Override
+            public void onRefreshSensorIds() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                mSensorArrayList.clear();
+                SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(VolleyApplication.PREFS_NAME, Activity.MODE_PRIVATE);
+                mSensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
+                mPendingRequests = mSensorIdSet.size();
+                for (String s : mSensorIdSet) {
+                    getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
+                }
+            }
+        };
+        sr.refreshSensorIds(getContext());
     }
 }
 

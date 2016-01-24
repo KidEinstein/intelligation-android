@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.weather;
 
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
@@ -28,16 +28,16 @@ import java.util.Date;
 import java.util.Locale;
 
 import in.gotech.intelligation.R;
+import in.gotech.intelligation.VolleyApplication;
 
 public class WeatherFragment extends Fragment {
 
-    Typeface weatherFont;
-
-    TextView cityField;
-    TextView updatedField;
-    TextView detailsField;
-    TextView currentTemperatureField;
-    TextView weatherIcon;
+    private Typeface weatherFont;
+    private TextView cityField;
+    private TextView updatedField;
+    private TextView detailsField;
+    private TextView currentTemperatureField;
+    private TextView weatherIcon;
 
     @Nullable
     @Override

@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.summary;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -16,6 +16,12 @@ import android.widget.ToggleButton;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.Sensor;
+import in.gotech.intelligation.VolleyApplication;
+import in.gotech.intelligation.network.JsonObjectSensorRequest;
+import in.gotech.intelligation.network.SensorResponseListener;
 
 /**
  * Created by anirudh on 27/07/15.
@@ -86,7 +92,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
         return new JsonObjectSensorRequest(url,
                 new SensorResponseListener() {
                     @Override
-                    void onNewSensorReading(Sensor newSensorReading) {
+                    public void onNewSensorReading(Sensor newSensorReading) {
                         Toast.makeText(getContext(), "Refereshed", Toast.LENGTH_SHORT).show();
                         setItem(newSensorReading);
                     }

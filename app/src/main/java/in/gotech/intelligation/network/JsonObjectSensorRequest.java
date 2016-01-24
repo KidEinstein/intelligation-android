@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.network;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -6,6 +6,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
+
+import in.gotech.intelligation.VolleyApplication;
 
 /**
  * Created by anirudh on 15/08/15.

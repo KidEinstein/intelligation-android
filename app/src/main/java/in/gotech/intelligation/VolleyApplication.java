@@ -10,6 +10,8 @@ import com.android.volley.toolbox.Volley;
  */
 public class VolleyApplication extends Application {
 
+    public static final String PREFS_NAME = "Credentials";
+
     private static VolleyApplication sInstance;
 
     private RequestQueue mRequestQueue;

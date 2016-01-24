@@ -14,6 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import in.gotech.intelligation.login.Login;
+import in.gotech.intelligation.stats.StatsFragment;
+import in.gotech.intelligation.summary.SummaryFragment;
+import in.gotech.intelligation.weather.WeatherFragment;
+
 /**
  * Created by anirudh on 15/08/15.
  */
@@ -34,7 +39,7 @@ public class MainFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
 
-        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, AppCompatActivity.MODE_PRIVATE);
+        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(VolleyApplication.PREFS_NAME, AppCompatActivity.MODE_PRIVATE);
 
         Toast.makeText(getActivity(), "Welcome : " + credentialsSharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
 

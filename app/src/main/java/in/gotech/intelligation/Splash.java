@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import in.gotech.intelligation.login.Login;
+import in.gotech.intelligation.navdrawer.NavDrawerActivity;
+
 /**
  * Created by anirudh on 20/07/15.
  */
@@ -29,7 +32,7 @@ public class Splash extends Activity {
             @Override
             public void run() {
             /* Create an Intent that will start the Menu-Activity. */
-                SharedPreferences credentialsSharedPref = getSharedPreferences(Login.PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences credentialsSharedPref = getSharedPreferences(VolleyApplication.PREFS_NAME, MODE_PRIVATE);
                 Intent mainIntent;
                 if (credentialsSharedPref.contains("username")) {
                     mainIntent = new Intent(Splash.this, NavDrawerActivity.class);

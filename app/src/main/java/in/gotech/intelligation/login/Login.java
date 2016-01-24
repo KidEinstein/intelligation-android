@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,17 +16,20 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
 import java.util.HashSet;
 
+import in.gotech.intelligation.navdrawer.NavDrawerActivity;
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.signup.SignUp;
+import in.gotech.intelligation.VolleyApplication;
+
 /**
  * Created by anirudh on 20/07/15.
  */
 public class Login extends AppCompatActivity {
-    public static final String PREFS_NAME = "Credentials";
 
     Button loginButton;
 
@@ -53,7 +56,7 @@ public class Login extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        SharedPreferences credentialsSharedPref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences credentialsSharedPref = getSharedPreferences(VolleyApplication.PREFS_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor credentialsEditor = credentialsSharedPref.edit();
                         credentialsEditor.putString("username", usernameEditText.getText() + "");
                         credentialsEditor.putString("password", passwordEditText.getText() + "");

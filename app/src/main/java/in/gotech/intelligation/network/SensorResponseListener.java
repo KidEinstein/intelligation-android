@@ -1,10 +1,12 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.network;
 
 import android.util.Log;
 
 import com.android.volley.Response;
 
 import org.json.JSONObject;
+
+import in.gotech.intelligation.Sensor;
 
 /**
  * Created by anirudh on 17/01/16.
@@ -33,6 +35,6 @@ public abstract class SensorResponseListener implements Response.Listener<JSONOb
         onNewSensorReading(newSensorReading);
     }
 
-    abstract void onNewSensorReading(Sensor newSensorReading);
+    public abstract void onNewSensorReading(Sensor newSensorReading);
 
 }

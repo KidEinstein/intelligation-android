@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package in.gotech.intelligation;
+package in.gotech.intelligation.navdrawer;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import in.gotech.intelligation.R;
 
 
 /**

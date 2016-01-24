@@ -11,8 +11,8 @@
     <string name="submit">Submit</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
-    <!--<string name="server_ip">http://intelligation.azurewebsites.net</string>-->
-    <string name="server_ip">http://192.168.1.128:8080</string>
+    <string name="server_ip">http://intelligation.azurewebsites.net</string>
+    <!--<string name="server_ip">http://192.168.1.128:8080</string>-->
     <string name="manual">Manual</string>
     <string name="auto">Auto</string>
     <string name="drawer_open">Open navigation drawer</string>

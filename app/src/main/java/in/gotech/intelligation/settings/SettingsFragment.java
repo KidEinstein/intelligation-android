@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.settings;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -19,9 +19,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
+import in.gotech.intelligation.VolleyApplication;
+import in.gotech.intelligation.network.CropsResponseListener;
+import in.gotech.intelligation.network.JsonArrayCropRequest;
+import in.gotech.intelligation.network.JsonObjectSensorRequest;
+import in.gotech.intelligation.R;
+import in.gotech.intelligation.Sensor;
+import in.gotech.intelligation.network.SensorResponseListener;
+import in.gotech.intelligation.login.Login;
+import in.gotech.intelligation.util.SensorRequest;
 
 /**
  * Created by anirudh on 16/01/16.
@@ -52,7 +61,7 @@ public class SettingsFragment extends Fragment{
         return new JsonObjectSensorRequest(url,
                 new SensorResponseListener() {
                     @Override
-                    void onNewSensorReading(Sensor newSensorReading) {
+                    public void onNewSensorReading(Sensor newSensorReading) {
                         mSensorArrayList.add(newSensorReading);
                         mSettingsListAdapter.notifyDataSetChanged();
                     }
@@ -66,13 +75,19 @@ public class SettingsFragment extends Fragment{
     }
 
     void getSensors() {
-        SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(Login.PREFS_NAME, Activity.MODE_PRIVATE);
+        SensorRequest sr = new SensorRequest() {
+            @Override
+            public void onRefreshSensorIds() {
+                SharedPreferences credentialsSharedPref = getActivity().getSharedPreferences(VolleyApplication.PREFS_NAME, Activity.MODE_PRIVATE);
 
-        Set<String> sensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
+                Set<String> sensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
 
-        for (String s : sensorIdSet) {
-            getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
-        }
+                for (String s : sensorIdSet) {
+                    getSensorJsonObjectRequest(Integer.parseInt(s)).fetchSensor();
+                }
+            }
+        };
+        sr.refreshSensorIds(getContext());
     }
 
     public JsonArrayCropRequest getCropsJsonArrayRequest() {
@@ -80,7 +95,7 @@ public class SettingsFragment extends Fragment{
         return new JsonArrayCropRequest(url,
                 new CropsResponseListener() {
                     @Override
-                    void onCropsResponse(ArrayList<CharSequence> crops) {
+                    public void onCropsResponse(ArrayList<CharSequence> crops) {
                         mCrops.addAll(crops);
 
                         View settingsRecyclerView = LayoutInflater.from(SettingsFragment.this.getContext()).inflate(R.layout.settings_recycler_view, mSettingsView, false);

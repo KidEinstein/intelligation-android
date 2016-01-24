@@ -1,4 +1,4 @@
-package in.gotech.intelligation;
+package in.gotech.intelligation.stats;
 
 /**
  * Created by anirudh on 21/07/15.
@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import in.gotech.intelligation.R;
 
 public class StatsFragment extends Fragment {
     @Nullable
