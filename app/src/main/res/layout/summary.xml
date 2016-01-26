@@ -8,7 +8,6 @@
 
     <ListView
         android:id="@+id/summary_list_view"
-        style="@style/FieldBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
