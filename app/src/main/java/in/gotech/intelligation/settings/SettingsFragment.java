@@ -29,7 +29,6 @@ import in.gotech.intelligation.network.JsonObjectSensorRequest;
 import in.gotech.intelligation.R;
 import in.gotech.intelligation.Sensor;
 import in.gotech.intelligation.network.SensorResponseListener;
-import in.gotech.intelligation.login.Login;
 import in.gotech.intelligation.util.SensorRequest;
 
 /**
@@ -128,7 +127,7 @@ public class SettingsFragment extends Fragment{
                                     pinSet.remove(sensor.pinNumber);
                                 }
                                 if (pinSet.isEmpty()) {
-                                    Toast.makeText(getContext(), "Cannot add any more sensors", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.cannot_add_sensors_toast, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 s.pinNumber = pinSet.first();

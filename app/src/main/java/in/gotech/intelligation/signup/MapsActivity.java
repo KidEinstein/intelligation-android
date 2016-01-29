@@ -8,8 +8,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -100,7 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                Toast.makeText(MapsActivity.this, "Requesting Location", Toast.LENGTH_LONG).show();
+                Toast.makeText(MapsActivity.this, R.string.requesting_location_toast, Toast.LENGTH_LONG).show();
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
             }
         });

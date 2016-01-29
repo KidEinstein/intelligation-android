@@ -22,7 +22,7 @@
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:text="Refresh" />
+            android:text="@string/refresh_button" />
 
         <TextView
             android:id="@+id/crop_name_text_view"
@@ -60,7 +60,7 @@
             android:layout_toRightOf="@id/auto_toggle_button"
             android:gravity="center"
             android:paddingTop="8dp"
-            android:text="Motor"
+            android:text="@string/motor_summary"
             android:textSize="18dp" />
 
 

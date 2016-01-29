@@ -48,7 +48,7 @@ public class SignUp extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(SignUp.this, "Signed up successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUp.this, R.string.signup_successfull_toast, Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 },
@@ -56,9 +56,9 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse.statusCode == 406) {
-                            Toast.makeText(SignUp.this, "Form Incomplete", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, R.string.signup_form_incomplete_toast, Toast.LENGTH_SHORT).show();
                         } else if (error.networkResponse.statusCode == 401) {
-                            Toast.makeText(SignUp.this, "User already exists", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, R.string.sign_up_user_exists_toast, Toast.LENGTH_SHORT).show();
                         }
 
                     }

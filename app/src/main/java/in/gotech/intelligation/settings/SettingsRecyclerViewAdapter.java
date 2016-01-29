@@ -31,7 +31,6 @@ import java.util.HashSet;
 import in.gotech.intelligation.R;
 import in.gotech.intelligation.Sensor;
 import in.gotech.intelligation.VolleyApplication;
-import in.gotech.intelligation.login.Login;
 
 /**
  * Created by anirudh on 16/01/16.
@@ -67,7 +66,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
     @Override
     public void onBindViewHolder(SettingsCardViewHolder holder, int position) {
         Sensor currentSensor = mSensors.get(position);
-        holder.pinNumberTextView.setText("Pin Number: " + currentSensor.pinNumber);
+        holder.pinNumberTextView.setText(mContext.getString(R.string.pin_number) + currentSensor.pinNumber);
         holder.cropSpinner.setSelection(mCrops.indexOf(currentSensor.cropName));
         if (currentSensor.editing) {
             holder.editImageButton.setImageDrawable(saveDrawable);
@@ -141,7 +140,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                                             credentialsEditor.putStringSet("sensor_ids", sensorIdSet);
                                             credentialsEditor.commit();
 
-                                            Toast.makeText(mContext, "Sensor deleted", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mContext, R.string.sensor_deleted_toast, Toast.LENGTH_SHORT).show();
                                         }
                                     },
                                     new Response.ErrorListener() {
@@ -200,7 +199,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                                             return;
                                         }
 
-                                        Toast.makeText(mContext, "New sensor added", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.new_sensor_added_toast, Toast.LENGTH_SHORT).show();
 
                                         cropSpinner.setEnabled(false);
                                         editImageButton.setImageDrawable(editDrawable);
@@ -226,7 +225,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<SettingsRe
                                     @Override
                                     public void onResponse(String response) {
                                         currentSensor.editing = false;
-                                        Toast.makeText(mContext, "Settings changed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, R.string.settings_changed_toast, Toast.LENGTH_SHORT).show();
                                         editImageButton.setImageDrawable(editDrawable);
                                         cropSpinner.setEnabled(false);
                                         deleteImageButton.setClickable(false);

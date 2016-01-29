@@ -86,17 +86,17 @@ public class Login extends AppCompatActivity {
                         loginButton.setEnabled(true);
                         if (error.networkResponse == null) {
                             if (error.getClass().equals(TimeoutError.class)) {
-                                Toast.makeText(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.time_out_login_toast, Toast.LENGTH_LONG).show();
                                 return;
                             }
                         }
 
                         if (error.networkResponse.statusCode == 401) {
-                            Toast.makeText(getApplicationContext(), "Wrong Aadhaar ID or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.wrong_aadhaar_or_pass_toast, Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        Toast.makeText(getApplicationContext(), "Network Error! Try again after some time", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.network_error_at_login_toast, Toast.LENGTH_SHORT).show();
 
 
                     }

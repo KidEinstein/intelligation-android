@@ -93,7 +93,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
                 new SensorResponseListener() {
                     @Override
                     public void onNewSensorReading(Sensor newSensorReading) {
-                        Toast.makeText(getContext(), "Refereshed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.RefeshedToast, Toast.LENGTH_SHORT).show();
                         setItem(newSensorReading);
                     }
                 },
@@ -110,7 +110,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
-                    Toast.makeText(getContext(), "Auto toggle checked!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.auto_toggle_checked_toast, Toast.LENGTH_SHORT).show();
                     mMotorSwitch.setEnabled(false);
 
                     VolleyApplication.getInstance().getRequestQueue().add(mAutoEnableRequest);
@@ -132,7 +132,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
-                    Toast.makeText(getContext(), "Motor toggle checked!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.motor_toggle_checked_toast, Toast.LENGTH_SHORT).show();
                     VolleyApplication.getInstance().getRequestQueue().add(mMotorEnableRequest);
                 } else {
                     // The toggle is disabled
@@ -148,7 +148,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getContext(), "Motor toggle checked!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.auto_toggle_checked_toast, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -166,7 +166,7 @@ public class SummaryView extends android.support.v7.widget.CardView {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getContext(), "Motor toggle checked!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.motor_toggle_checked_toast, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {

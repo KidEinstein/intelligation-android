@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import in.gotech.intelligation.login.Login;
 import in.gotech.intelligation.stats.StatsFragment;
 import in.gotech.intelligation.summary.SummaryFragment;
 import in.gotech.intelligation.weather.WeatherFragment;
@@ -97,11 +96,11 @@ public class MainFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Summary";
+                    return getString(R.string.summary_title);
                 case 1:
-                    return "Statistics";
+                    return getString(R.string.statistics_title);
                 case 2:
-                    return "Weather";
+                    return getString(R.string.weather_title);
             }
             return "";
         }
