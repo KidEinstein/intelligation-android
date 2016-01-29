@@ -7,7 +7,6 @@
     <string name="password">Password</string>
     <string name="name">Name</string>
     <string name="mobile_number">Mobile Number</string>
-    <string name="number_of_field_sections">Number of field sections</string>
     <string name="submit">Submit</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
@@ -32,6 +31,26 @@
     <string name="weather_thunder">&#xf01e;</string>
     <string name="weather_drizzle">&#xf01c;</string>
     <string name="title_activity_maps">Map</string>
+    <string name="summary_title">Summary</string>
+    <string name="statistics_title">Statistics</string>
+    <string name="cannot_add_sensors_toast">Cannot add any more sensors</string>
+    <string name="pin_number">"Pin Number: "</string>
+    <string name="sensor_deleted_toast">Sensor deleted</string>
+    <string name="new_sensor_added_toast">New sensor added</string>
+    <string name="settings_changed_toast">Settings changed</string>
+    <string name="wrong_aadhaar_or_pass_toast">Wrong Aadhaar ID or password</string>
+    <string name="network_error_at_login_toast">Network Error! Try again after some time</string>
+    <string name="time_out_login_toast">Oops. Timeout error!</string>
+    <string name="requesting_location_toast">Requesting Location</string>
+    <string name="signup_form_incomplete_toast">Form Incomplete</string>
+    <string name="sign_up_user_exists_toast">User already exists</string>
+    <string name="signup_successfull_toast">Signed up successfully</string>
+    <string name="refreshed_toast">Refreshed</string>
+    <string name="motor_toggle_checked_toast">Motor toggle checked!</string>
+    <string name="auto_toggle_checked_toast">Auto toggle checked!</string>
+    <string name="weather_title">Weather</string>
+    <string name="refresh_button">Refresh</string>
+    <string name="motor_summary">Motor</string>
 
 </resources>
 
