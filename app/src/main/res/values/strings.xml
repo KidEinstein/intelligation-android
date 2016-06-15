@@ -10,8 +10,8 @@
     <string name="submit">Submit</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
-    <string name="server_ip">http://intelligation.azurewebsites.net</string>
-    <!--<string name="server_ip">http://192.168.1.128:8080</string>-->
+    <!--<string name="server_ip">http://intelligation.azurewebsites.net</string>-->
+    <string name="server_ip" translatable="false">http://192.168.1.128:8080</string>
     <string name="manual">Manual</string>
     <string name="auto">Auto</string>
     <string name="drawer_open">Open navigation drawer</string>
@@ -22,14 +22,14 @@
         <item>Logout</item>
     </string-array>
 
-    <string name="weather_sunny">&#xf00d;</string>
-    <string name="weather_clear_night">&#xf02e;</string>
-    <string name="weather_foggy">&#xf014;</string>
-    <string name="weather_cloudy">&#xf013;</string>
-    <string name="weather_rainy">&#xf019;</string>
-    <string name="weather_snowy">&#xf01b;</string>
-    <string name="weather_thunder">&#xf01e;</string>
-    <string name="weather_drizzle">&#xf01c;</string>
+    <string name="weather_sunny" translatable="false">&#xf00d;</string>
+    <string name="weather_clear_night" translatable="false">&#xf02e;</string>
+    <string name="weather_foggy" translatable="false">&#xf014;</string>
+    <string name="weather_cloudy" translatable="false">&#xf013;</string>
+    <string name="weather_rainy" translatable="false">&#xf019;</string>
+    <string name="weather_snowy" translatable="false">&#xf01b;</string>
+    <string name="weather_thunder" translatable="false">&#xf01e;</string>
+    <string name="weather_drizzle" translatable="false">&#xf01c;</string>
     <string name="title_activity_maps">Map</string>
     <string name="summary_title">Summary</string>
     <string name="statistics_title">Statistics</string>
@@ -51,6 +51,11 @@
     <string name="weather_title">Weather</string>
     <string name="refresh_button">Refresh</string>
     <string name="motor_summary">Motor</string>
-
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="get_location">Get Location</string>
+    <string name="select_location">Select location</string>
+    <string name="device_id">Device ID</string>
+    <string name="sign_up_no_location">Please select a location</string>
 </resources>
 

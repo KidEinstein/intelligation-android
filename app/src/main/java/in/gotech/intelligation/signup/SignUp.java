@@ -1,5 +1,6 @@
 package in.gotech.intelligation.signup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,11 +19,14 @@ import in.gotech.intelligation.VolleyApplication;
  * Created by anirudh on 20/07/15.
  */
 public class SignUp extends AppCompatActivity {
+    private final int MAP_ACTIVITY_REQUEST_CODE = 1;
     EditText nameEditText;
     EditText mobileNumberEditText;
     EditText aadhaarIdEditText;
     EditText passwordEditText;
-
+    EditText latitudeEditText;
+    EditText longitudeEditText;
+    EditText deviceIdEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +35,30 @@ public class SignUp extends AppCompatActivity {
         mobileNumberEditText = (EditText) findViewById(R.id.mobile_number_edit_text);
         aadhaarIdEditText = (EditText) findViewById(R.id.aadhaar_id_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
-
+        latitudeEditText = (EditText) findViewById(R.id.latitude_edit_text);
+        longitudeEditText = (EditText) findViewById(R.id.longitude_edit_text);
+        deviceIdEditText = (EditText) findViewById(R.id.device_id_edit_text);
     }
 
     public void submitSignUp(View v) {
         VolleyApplication.getInstance().getRequestQueue().add(getSignUpJsonObjectRequest());
+    }
+
+    public void getLocation(View v) {
+        Intent mapActivity = new Intent(this, MapsActivity.class);
+        startActivityForResult(mapActivity, MAP_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MAP_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                double latitude = data.getDoubleExtra("latitude", 0);
+                double longitude = data.getDoubleExtra("longitude", 0);
+                longitudeEditText.setText(latitude + "");
+                latitudeEditText.setText(longitude + "");
+            }
+        }
     }
 
     private StringRequest getSignUpJsonObjectRequest() {
@@ -43,7 +66,17 @@ public class SignUp extends AppCompatActivity {
         String mobileNumber = mobileNumberEditText.getText().toString();
         String aadhaarId = aadhaarIdEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        String url = getString(R.string.server_ip) + "/sign_up?name=" + name + "&mobile_no=" + mobileNumber + "&aadhaar_id=" + aadhaarId + "&password=" + password;
+        String latitude = latitudeEditText.getText().toString();
+        String longitude = longitudeEditText.getText().toString();
+        String deviceId = deviceIdEditText.getText().toString();
+        String url = getString(R.string.server_ip)
+                + "/sign_up?name=" + name
+                + "&mobile_no=" + mobileNumber
+                + "&aadhaar_id=" + aadhaarId
+                + "&password=" + password
+                + "&lat=" + latitude
+                + "&lon=" + longitude
+                + "&device_id=" + deviceId;
         StringRequest signUpRequest = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override

@@ -1,7 +1,9 @@
 package in.gotech.intelligation.signup;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,7 +29,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private FloatingActionButton locationFab;
-
+    private LatLng mLatLng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng farmLocation = new LatLng(latLng.latitude, latLng.longitude);
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(farmLocation).title("Field Location"));
+                mLatLng = latLng;
 //                mMap.moveCamera(CameraUpdateFactory.newLatLng(farmLocation));
             }
         });
@@ -64,10 +68,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Field Location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.addMarker(new MarkerOptions().position(mLatLng).title("Field Location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng));
+                CameraUpdate zoomIn = CameraUpdateFactory.zoomTo(17);
+                mMap.moveCamera(zoomIn);
             }
 
             @Override
@@ -102,5 +108,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
             }
         });
+
+
+    }
+    public void selectLocation(View v) {
+        if (mLatLng == null) {
+            Toast.makeText(this, R.string.sign_up_no_location, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("latitude", mLatLng.latitude);
+        returnIntent.putExtra("longitude", mLatLng.longitude);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }

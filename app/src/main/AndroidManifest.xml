@@ -41,7 +41,11 @@
 
         <activity
             android:name=".signup.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+
+        <provider
+            android:authorities="in.gotech.intelligation"
+            android:name=".data.StatsProvider" />
     </application>
 
 </manifest>

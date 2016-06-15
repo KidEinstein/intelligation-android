@@ -88,12 +88,12 @@ public class SummaryView extends android.support.v7.widget.CardView {
     }
 
     private JsonObjectSensorRequest getRefreshJsonObjectRequest(int sensorId) {
-        String url = getContext().getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
+        String url =  getContext().getString(R.string.server_ip) + "/request?sensor_id=" + sensorId;
         return new JsonObjectSensorRequest(url,
                 new SensorResponseListener() {
                     @Override
                     public void onNewSensorReading(Sensor newSensorReading) {
-                        Toast.makeText(getContext(), R.string.RefeshedToast, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.refreshed_toast, Toast.LENGTH_SHORT).show();
                         setItem(newSensorReading);
                     }
                 },
