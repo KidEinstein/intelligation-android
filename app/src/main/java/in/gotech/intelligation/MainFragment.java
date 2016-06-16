@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -47,6 +49,13 @@ public class MainFragment extends Fragment {
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
 
         mPager.setAdapter(mAdapter);
+
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
