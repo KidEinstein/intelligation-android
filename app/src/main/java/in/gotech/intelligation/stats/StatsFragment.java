@@ -6,7 +6,6 @@ package in.gotech.intelligation.stats;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,20 +20,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.GraphicalView;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.chart.TimeChart;
-import org.achartengine.model.TimeSeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +37,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import in.gotech.intelligation.R;
@@ -55,18 +47,13 @@ public class StatsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private StatsRecyclerViewAdapter mStatsRecyclerViewAdapter;
-    private ArrayList<TimeSeries> mSensorTimeSeriesList;
-    private XYMultipleSeriesDataset mDataset;
-    private XYMultipleSeriesRenderer mRenderer;
-    List<double[]> values = new ArrayList<double[]>();
-    private GraphicalView mChartView;
-    private TimeSeries time_series;
+    private ArrayList<SensorStatsData> mSensorStatsDataList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.stats, container, false);
         LinearLayout statsLinearLayout = (LinearLayout) v.findViewById(R.id.linear_layout_stats);
 
-        mSensorTimeSeriesList = new ArrayList<>();
+        mSensorStatsDataList = new ArrayList<>();
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_stats);
         mRecyclerView.setHasFixedSize(true);
@@ -74,7 +61,7 @@ public class StatsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mStatsRecyclerViewAdapter = new StatsRecyclerViewAdapter(getContext(), mSensorTimeSeriesList);
+        mStatsRecyclerViewAdapter = new StatsRecyclerViewAdapter(getContext(), mSensorStatsDataList);
         mRecyclerView.setAdapter(mStatsRecyclerViewAdapter);
 
         populateLineData();
@@ -89,35 +76,40 @@ public class StatsFragment extends Fragment {
         Set<String> sensorIdSet = credentialsSharedPref.getStringSet("sensor_ids", null);
 
         for (String s : sensorIdSet) {
-            JsonArrayRequest statRequest = getStatJsonArrayRequest(s);
+            JsonObjectRequest statRequest = getStatJsonObjectRequest(s);
             RequestQueue requestQueue = VolleyApplication.getInstance().getRequestQueue();
             requestQueue.add(statRequest);
         }
     }
 
-    public JsonArrayRequest getStatJsonArrayRequest(String sensorId) {
+    public JsonObjectRequest getStatJsonObjectRequest(String sensorId) {
         String url = getString(R.string.server_ip) + "/get_stats?sensor_id=" + sensorId;
-        return new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
+        return new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        time_series = new TimeSeries("Sensor Values");
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject sensorValue = response.getJSONObject(i);
+                    public void onResponse(JSONObject response) {
+                        SensorStatsData sensorStatsData = new SensorStatsData();
+                        try {
+                            String cropName = response.getString("crop");
+                            sensorStatsData.cropName = cropName;
+                            JSONArray valueArray = response.getJSONArray("values");
+                            for (int i = 0; i < valueArray.length(); i++) {
+
+                                JSONObject sensorValue = valueArray.getJSONObject(i);
                                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                                 Date d = formatter.parse(sensorValue.getString("time_recorded"));
                                 double value = sensorValue.getDouble("value");
-                                time_series.add(d, value);
+                                sensorStatsData.sensorTimeSeries.add(d, value);
                                 Log.d("StatFragment", "Added Date: " + d + " Value: " + value);
-                            } catch (JSONException e) {
-                                Log.e("StatsFragment", "Oh noes, can't parse JSON");
-                            } catch (ParseException e) {
-                                Log.e("StatsFragment", "Oh noes, can't parse date");
+
                             }
+                            mSensorStatsDataList.add(sensorStatsData);
+                            mStatsRecyclerViewAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            Log.e("StatsFragment", "Oh noes, can't parse JSON");
+                        } catch (ParseException e) {
+                            Log.e("StatsFragment", "Oh noes, can't parse date");
                         }
-                        mSensorTimeSeriesList.add(time_series);
-                        mStatsRecyclerViewAdapter.notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener() {

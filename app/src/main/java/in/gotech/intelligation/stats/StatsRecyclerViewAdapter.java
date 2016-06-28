@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -16,7 +18,6 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import in.gotech.intelligation.R;
 
@@ -25,10 +26,10 @@ import in.gotech.intelligation.R;
  */
 public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecyclerViewAdapter.StatsCardViewHolder> {
     private Context mContext;
-    private ArrayList<TimeSeries> mSensorTimeSeriesList;
+    private ArrayList<SensorStatsData> mSensorTimeSeriesList;
 
-    public StatsRecyclerViewAdapter(Context context, ArrayList<TimeSeries> sensorTimeSeriesList) {
-        mSensorTimeSeriesList = sensorTimeSeriesList;
+    public StatsRecyclerViewAdapter(Context context, ArrayList<SensorStatsData> sensorStatDataList) {
+        mSensorTimeSeriesList = sensorStatDataList;
         mContext = context;
     }
     @Override
@@ -41,7 +42,8 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
     @Override
     public void onBindViewHolder(StatsCardViewHolder holder, int position) {
         holder.mDataset.clear();
-        holder.mDataset.addSeries(mSensorTimeSeriesList.get(position));
+        holder.mDataset.addSeries(mSensorTimeSeriesList.get(position).sensorTimeSeries);
+        holder.cropName.setText(mSensorTimeSeriesList.get(position).cropName);
     }
 
     @Override
@@ -50,21 +52,27 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
     }
 
     public class StatsCardViewHolder extends RecyclerView.ViewHolder {
+        private TextView cropName;
         private XYMultipleSeriesDataset mDataset;
         private XYMultipleSeriesRenderer mRenderer;
         private GraphicalView mChartView;
         private TimeSeries time_series;
+        private LinearLayout mStatsCardLinearLayout;
         public StatsCardViewHolder(ViewGroup statsCardView) {
             super(statsCardView);
+            mStatsCardLinearLayout = (LinearLayout) statsCardView.findViewById(R.id.linear_layout_stats_card);
+            cropName = (TextView) statsCardView.findViewById(R.id.text_view_crop_name);
             // create dataset and renderer
             mDataset = new XYMultipleSeriesDataset();
             mRenderer = new XYMultipleSeriesRenderer();
             mRenderer.setAxisTitleTextSize(16);
             mRenderer.setChartTitleTextSize(20);
-            mRenderer.setLabelsTextSize(15);
-            mRenderer.setLegendTextSize(15);
-            mRenderer.setPointSize(3f);
-
+            mRenderer.setLabelsTextSize(25);
+            mRenderer.setPointSize(2f);
+            mRenderer.setApplyBackgroundColor(true);
+            mRenderer.setBackgroundColor(Color.WHITE);
+            mRenderer.setMarginsColor(Color.WHITE);
+            mRenderer.setShowLegend(false);
             XYSeriesRenderer r = new XYSeriesRenderer();
             r.setColor(Color.BLACK);
             r.setPointStyle(PointStyle.CIRCLE);
@@ -75,7 +83,8 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
             mRenderer.setPanEnabled(true);
             mRenderer.setZoomEnabled(true, true);
             mRenderer.setZoomButtonsVisible(true);
-
+            mRenderer.setMargins(new int[] {30, 50, 70, 30});
+            mRenderer.setYLabelsPadding(30f);
             time_series = new TimeSeries("test");
 
             mDataset.addSeries(time_series);
@@ -90,9 +99,9 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
                 }
             });
 
-            mChartView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 500));
+            mChartView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 650));
             mChartView.setBackgroundColor(mContext.getResources().getColor(android.R.color.white));
-            statsCardView.addView(mChartView);
+            mStatsCardLinearLayout.addView(mChartView);
         }
     }
 }
