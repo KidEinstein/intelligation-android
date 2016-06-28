@@ -69,6 +69,8 @@ public class SummaryView extends android.support.v7.widget.CardView {
     public void setItem(Sensor item) {
         mSensorValueTextView.setText(item.getSensorValue() + "%");
         mCropNameTextView.setText(item.getCropName());
+        mAutoToggleButton.setOnCheckedChangeListener(null);
+        mMotorSwitch.setOnCheckedChangeListener(null);
         mAutoToggleButton.setChecked(item.getAutoStatus());
         mMotorSwitch.setChecked(item.getMotorStatus());
         mMotorSwitch.setEnabled(!item.getAutoStatus());
